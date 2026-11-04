@@ -1,0 +1,4 @@
+{
+  "private": true,
+  "dependencies": { "three": "0.160.0", "esbuild": "0.20.2" }
+}
