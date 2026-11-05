@@ -30,7 +30,7 @@ export function createDrum3D() {
   labelLayer.className = 'labels';
   el.appendChild(labelLayer);
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -123,7 +123,7 @@ export function createDrum3D() {
   function build(p) {
     if (D) { flipG.remove(D.group); disposeTree(D.group); }
     const n = p.lugs, type = p.type;
-    const H = 2 * R * (type === 'snare' ? 0.4 : type === 'floor' ? 0.98 : 0.66);
+    const H = 2 * R * (type === 'snare' ? 0.4 : type === 'floor' ? 0.98 : type === 'kick' ? 0.8 : 0.66);
     const fin = FINISHES[p.finish] || FINISHES.wine;
     const group = new THREE.Group();
     const parts = [];   // {obj, base, off}
@@ -131,7 +131,7 @@ export function createDrum3D() {
 
     // shell
     const shellMat = new THREE.MeshPhysicalMaterial({ color: fin.color, metalness: fin.metal, roughness: fin.rough, clearcoat: fin.metal ? 0 : 1, clearcoatRoughness: 0.06, side: THREE.DoubleSide });
-    const shell = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 128, 1, true), shellMat);
+    const shell = new THREE.Mesh(new THREE.CylinderGeometry(R, R, H, 80, 1, true), shellMat);
     add(shell);
     // bearing edges (thin inner rings)
     const edgeMat = new THREE.MeshStandardMaterial({ color: 0xBFA27A, roughness: 0.6 });
@@ -160,11 +160,11 @@ export function createDrum3D() {
     ['top', 'bottom'].forEach(side => {
       const dir = side === 'top' ? 1 : -1, yEdge = dir * H / 2;
       const hoop = new THREE.Group();
-      const band = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.024, R + 0.024, 0.07, 128, 1, true), chrome);
+      const band = new THREE.Mesh(new THREE.CylinderGeometry(R + 0.024, R + 0.024, 0.07, 80, 1, true), chrome);
       band.position.y = yEdge + dir * 0.014; hoop.add(band);
-      const lip = new THREE.Mesh(new THREE.TorusGeometry(R + 0.027, 0.011, 10, 128), chrome);
+      const lip = new THREE.Mesh(new THREE.TorusGeometry(R + 0.027, 0.011, 8, 96), chrome);
       lip.rotation.x = Math.PI / 2; lip.position.y = yEdge + dir * 0.05; hoop.add(lip);
-      const flange = new THREE.Mesh(new THREE.TorusGeometry(R + 0.03, 0.007, 8, 128), chrome);
+      const flange = new THREE.Mesh(new THREE.TorusGeometry(R + 0.03, 0.007, 6, 96), chrome);
       flange.rotation.x = Math.PI / 2; flange.position.y = yEdge - dir * 0.018; hoop.add(flange);
       for (let i = 0; i < n; i++) {
         const [x, z] = lugXZ(i, n, R + 0.052, side);
